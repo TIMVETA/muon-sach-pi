@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mượn Sách Cộng Đồng (Pi)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f5f5f5; }
+    header { background: #4a6cf7; color: white; padding: 1rem; text-align: center; }
+    main { padding: 1rem; }
+    .card { background: white; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    input, textarea, button { width: 100%; padding: 0.7rem; margin-top: 0.5rem; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #4a6cf7; color: white; border: none; font-weight: 600; }
+    .book-img { width: 100%; border-radius: 8px; margin-top: 0.5rem; }
+    .rating { color: #f5a623; }
+  </style>
+</head>
+<body><header>
+  <h2>📚 Mượn Sách Cộng Đồng (Pi)</h2>
+  <p>Chia sẻ tri thức – Xây dựng niềm tin</p>
+</header><main>
+  <!-- Đăng ký người cho mượn -->
+  <div class="card">
+    <h3>🧑‍💼 Đăng ký cho mượn sách</h3>
+    <input id="ownerName" placeholder="Tên của bạn" />
+    <input id="ownerPi" placeholder="Số Pi đặt cọc" type="number" />
+    <button onclick="registerOwner()">Đăng ký</button>
+  </div>  <!-- Đăng sách -->  <div class="card">
+    <h3>📖 Đăng sách đang có</h3>
+    <input id="bookTitle" placeholder="Tên sách" />
+    <textarea id="bookDesc" placeholder="Mô tả ngắn"></textarea>
+    <input id="bookImage" type="file" accept="image/*" />
+    <button onclick="addBook()">Đăng sách</button>
+  </div>  <!-- Danh sách sách -->  <div class="card">
+    <h3>📚 Sách đang cho mượn</h3>
+    <div id="bookList"></div>
+  </div>
+</main><script>
+  const books = [];
+
+  function registerOwner() {
+    const name = document.getElementById('ownerName').value;
+    const pi = document.getElementById('ownerPi').value;
+    if (!name || !pi) return alert('Vui lòng nhập đủ thông tin');
+    alert(`Chào ${name}! Bạn đã đăng ký với ${pi} Pi.`);
+  }
+
+  function addBook() {
+    const title = document.getElementById('bookTitle').value;
+    const desc = document.getElementById('bookDesc').value;
+    const imgInput = document.getElementById('bookImage');
+    if (!title || !imgInput.files[0]) return alert('Thiếu thông tin sách');
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      books.push({ title, desc, img: e.target.result, rating: 5 });
+      renderBooks();
+    };
+    reader.readAsDataURL(imgInput.files[0]);
+  }
+
+  function renderBooks() {
+    const list = document.getElementById('bookList');
+    list.innerHTML = '';
+    books.forEach(b => {
+      list.innerHTML += `
+        <div class="card">
+          <h4>${b.title}</h4>
+          <p>${b.desc}</p>
+          <img src="${b.img}" class="book-img" />
+          <div class="rating">⭐ ${b.rating}/5</div>
+          <button onclick="alert('Liên hệ trực tiếp người cho mượn để thỏa thuận')">Mượn sách</button>
+        </div>`;
+    });
+  }
+</script></body>
+</html>
